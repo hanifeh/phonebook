@@ -1,0 +1,36 @@
+{# not work #}
+{% extends 'base.html' %}
+
+{% block title %}Creat new contact{% endblock %}
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+</form>
+<button class="btn btn-info">Create</button>
+{% endblock %}
+{% block script %}
+    <script>
+    $(document).ready(function () {
+        $("button").click(function (event) {
+            var first_name = $('#id_first_name').val();
+            var last_name = $('#id_last_name').val();
+            var phone_number = $('#id_phone_number').val();
+            $.ajax({
+                method: 'POST',
+                url: "/create/",
+                data: {
+                    first_name: first_name,
+                    last_name: last_name,
+                    phone_number: phone_number,
+                 },
+                success: function (response) {
+                    alert(response.status);
+                },
+
+            });
+        });
+    });
+    </script>
+{% endblock %}

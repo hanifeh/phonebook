@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+    <form action="" method="post">
+        <input placeholder="Search" name="searched" required id="searched" maxlength="11">
+    </form>
+    <div>
+        <select id="mode">
+            <option value="1">bakhshi az shomare</option>
+            <option value="2">kole shomare</option>
+            <option value="3">shoroe shomare</option>
+            <option value="4">payane shomare</option>
+        </select>
+    </div>
+    <button class="btn btn-info">Search</button>
+
+
+    <table id="div1">
+
+    </table>
+
+    <div class="center" style="text-align: center">
+        <h4 id="count"></h4>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            $("button").click(function (event) {
+                $('#div1').html('');
+                $('#count').html('');
+                var num = $('#searched').val();
+                var mode = $('#mode').val()
+                if (/^[0-9]{1,11}$/.test(num)) {
+                    $.ajax({
+                        method: 'POST',
+                        url: "/search/",
+                        data: {
+                            searched: num,
+                            mode: mode,
+                        },
+                        success: function (request) {
+                            $('#div1').append('<tr>')
+                            $('#div1').append('<th>first name</th>')
+                            $('#div1').append('<th>last name</th>')
+                            $('#div1').append('<th>phone number</th>')
+                            $('#div1').append('</tr>')
+                            $(request.results).each(function (index, obj) {
+
+                                $('#div1').append('<tr>')
+                                $('#div1').append('<td>' + obj.first_name + '</td>')
+                                $('#div1').append('<td>' + obj.last_name + '</td>')
+                                $('#div1').append('<td>' + obj.phone_number + '</td>')
+                                $('#div1').append('</tr>')
+                                $('#count').html('result : ' + request.count)
+
+                            });
+                            if (request.result) {
+                                $('#div1').html(request.result)
+                            }
+
+                        }
+                    });
+                } else {
+                    alert('enter number only.');
+                }
+            });
+        });
+    </script>
+{% endblock %}
+{% block style %}
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+{% endblock %}

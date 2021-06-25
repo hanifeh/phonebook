@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+{# navbar #}
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top container">
+    {#  left navbar items   #}
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'create' %}">Create</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'new search' %}">Search</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'phonebook' %}">Phonebook</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'action' %}">Actions</a>
+        </li>
+    </ul>
+    {# right navbar items #}
+    <ul class="navbar-nav ml-auto">
+        {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">{{ user.username | capfirst }}</a>
+            </li>
+        {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Log In</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+<br>
+<div class="container mt-5">
+    {% block content %}
+    {% endblock %}
+</div>
+</body>
+
+{% block style %}
+{% endblock %}
+
+{% block script %}
+{% endblock %}
+
+</html>

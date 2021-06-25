@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+    <form action="" method="get">
+        <label for="searched"></label><input placeholder="Search" name="searched" required id="searched"
+                                             maxlength="11">
+
+            <label for="mode"></label><select id="mode" name="mode">
+            <option value="1">bakhshi az shomare</option>
+            <option value="2">kole shomare</option>
+            <option value="3">shoroe shomare</option>
+            <option value="4">payane shomare</option>
+        </select>
+
+        <button class="btn btn-dark" type="submit">Search🔎</button>
+    </form>
+    <br>
+    <table id="div1">
+        <tr>
+            <th>👥first name :</th>
+            <th>📑last name :</th>
+            <th>📞phone number :</th>
+        </tr>
+        {% for obj in page_obj %}
+            <tr>
+                <th>{{ obj.first_name }}</th>
+                <th>{{ obj.last_name }}</th>
+                <th>{{ obj.phone_number }}<a class="btn btn-primary float-right mr-2" href="{% url 'edit' obj.pk %}" role="button">Edit📝</a></th>
+            </tr>
+        {% endfor %}
+    </table>
+    <div class="text-center">
+
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+
+    </div>
+{% endblock %}
+
+{% block style %}
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+{% endblock %}
