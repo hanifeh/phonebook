@@ -1,36 +1,48 @@
-{# not work #}
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 
 {% block title %}Creat new contact{% endblock %}
 {% block content %}
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-
-</form>
-<button class="btn btn-info">Create</button>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="first_name">First name</label>
+            {{ form.first_name|add_class:'form-control' }}
+        </div>
+        <div class="form-group">
+            <label for="last_name">Last name</label>
+            {{ form.last_name|add_class:'form-control' }}
+        </div>
+        <div class="form-group">
+            <label for="phone_number">Phone Number</label>
+            {{ form.phone_number|add_class:'form-control' }}
+        </div>
+    </form>
+    <button class="btn btn-info">Create</button>
 {% endblock %}
 {% block script %}
     <script>
-    $(document).ready(function () {
-        $("button").click(function (event) {
-            var first_name = $('#id_first_name').val();
-            var last_name = $('#id_last_name').val();
-            var phone_number = $('#id_phone_number').val();
-            $.ajax({
-                method: 'POST',
-                url: "/create/",
-                data: {
-                    first_name: first_name,
-                    last_name: last_name,
-                    phone_number: phone_number,
-                 },
-                success: function (response) {
-                    alert(response.status);
-                },
-
+        $(document).ready(function () {
+            $("button").click(function (event) {
+                var first_name = $('#id_first_name').val();
+                var last_name = $('#id_last_name').val();
+                var phone_number = $('#id_phone_number').val();
+                $.ajax({
+                    method: 'POST',
+                    url: "/create/",
+                    data: {
+                        first_name: first_name,
+                        last_name: last_name,
+                        phone_number: phone_number,
+                    },
+                    success: function (response) {
+                        alert(response.status);
+                    },
+                    error: function (response) {
+                        alert(response.responseJSON.errors);
+                    },
+                });
             });
         });
-    });
     </script>
 {% endblock %}

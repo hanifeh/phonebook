@@ -9,11 +9,11 @@ class UserForm(forms.ModelForm):
         self.user = kwargs.pop('user')
         super(UserForm, self).__init__(*args, **kwargs)
 
-    def clean_phone_number(self):
-        phone_number = self.cleaned_data['phone_number']
-        if models.MyUser.objects.filter(user=self.user, phone_number=phone_number).exists():
-            raise ValidationError('phone number already exist. ')
-        return phone_number
+    # def clean_phone_number(self):
+    #     phone_number = self.cleaned_data['phone_number']
+    #     if models.MyUser.objects.filter(user=self.user, phone_number=phone_number).exists():
+    #         raise ValidationError('phone number already exist. ')
+    #     return phone_number
 
     class Meta:
         model = models.MyUser

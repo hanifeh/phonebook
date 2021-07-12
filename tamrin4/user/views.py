@@ -1,3 +1,7 @@
+import logging
+import string
+
+import weasyprint
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import model_to_dict
@@ -9,17 +13,21 @@ from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from rest_framework import generics, viewsets
 from rest_framework.response import Response
 
-from user import forms, models
+from . import forms, models
 from django.views.decorators.csrf import csrf_exempt
 from . import serializers
 # Create your views here.
-from user.forms import UserForm, EditForm
+from .forms import UserForm, EditForm
+
+
+logger = logging.getLogger(__name__)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class CreateUser(LoginRequiredMixin, CreateView):
     model = models.MyUser
     form_class = UserForm
+    template_name = 'create_user.html'
 
     def get_form_kwargs(self):
         kw = super(CreateUser, self).get_form_kwargs()
@@ -27,16 +35,21 @@ class CreateUser(LoginRequiredMixin, CreateView):
         return kw
 
     def form_invalid(self, form):
-        return JsonResponse({'status': "error"})
+        logger.info(f'form invalid.')
+        return JsonResponse({'errors': "error"}, status=400)
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.user = self.request.user
-        self.object.save()
+        try:
+            self.object = form.save(commit=False)
+            self.object.user = self.request.user
+            self.object.save()
+        except:
+            return JsonResponse({'errors': "error"}, status=422)
         if 'action' not in self.request.session.keys():
             self.request.session['action'] = []
 
         self.request.session['action'] += [f'add contact : {self.object.phone_number} .']
+        logger.info(f'{self.request.user} create {self.object.phone_number} .')
         return JsonResponse({'status': "ok"})
 
 
@@ -87,14 +100,14 @@ class Search(LoginRequiredMixin, ListView):
         elif mode == '4':
             obj = models.MyUser.objects.filter(phone_number__endswith=searched, user=request.user)
         else:
-            return JsonResponse({'result': "error"})
+            return JsonResponse({'result': "error"}, status=400)
         if obj:
             return JsonResponse({
                 'results': list(obj.values()),
                 'count': obj.count(),
             })
         else:
-            return JsonResponse({'result': "phone number not found !"})
+            return JsonResponse({'result': "phone number not found !"}, status=404)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -116,11 +129,13 @@ class NewSearch(LoginRequiredMixin, ListView):
             obj = models.MyUser.objects.filter(phone_number__endswith=searched, user=self.request.user)
         else:
             obj = models.MyUser.objects.filter(user=self.request.user)
+
         if mode:
             if 'action' not in self.request.session.keys():
                 self.request.session['action'] = []
 
             self.request.session['action'] += [f'search : {searched} .']
+            logger.info(f'{self.request.user} searched {searched}')
         return obj
 
 
@@ -133,6 +148,7 @@ class PhoneBook(LoginRequiredMixin, ListView):
     def get_queryset(self):
         qs = models.MyUser.objects.filter(user=self.request.user)
         return qs
+
 
 class EditNumber(LoginRequiredMixin, UpdateView):
     model = models.MyUser
@@ -157,6 +173,7 @@ class EditNumber(LoginRequiredMixin, UpdateView):
         if 'action' not in self.request.session.keys():
             self.request.session['action'] = []
         self.request.session['action'] += [f'edit contact : {self.object.phone_number} .']
+        logger.info(f'{self.request.user} edit contact {self.object.phone_number}')
         super(EditNumber, self).form_valid(form)
         return redirect('/newsearch')
 
@@ -173,6 +190,20 @@ class ActionView(LoginRequiredMixin, ListView):
             return qs
         else:
             return []
+
+
+class GetPdfPhoneBook(LoginRequiredMixin, ListView):
+    template_name = 'pdfphonebook.html'
+    model = models.MyUser
+
+    def get(self, request, *args, **kwargs):
+        g = super(GetPdfPhoneBook, self).get(request, *args, **kwargs)
+        rendered_content = g.rendered_content
+        pdf = weasyprint.HTML(string=rendered_content).write_pdf()
+        if 'action' not in self.request.session.keys():
+            self.request.session['action'] = []
+        self.request.session['action'] += [f'get phonebook pdf .']
+        return HttpResponse(pdf, content_type='application/pdf')
 
 
 class PhoneListAPI(viewsets.ModelViewSet):

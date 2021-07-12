@@ -1,0 +1,43 @@
+Watching for file changes with StatReloader
+admin searched 0912
+/home/sadegh/Documents/djangoproject/phonebook/tamrin4/djangotamrin4/settings.py changed, reloading.
+Watching for file changes with StatReloader
+admin searched 12
+/home/sadegh/Documents/djangoproject/phonebook/tamrin4/user/views.py changed, reloading.
+Watching for file changes with StatReloader
+admin searched 12
+admin searched 0912
+/home/sadegh/Documents/djangoproject/phonebook/tamrin4/djangotamrin4/settings.py changed, reloading.
+Watching for file changes with StatReloader
+admin searched 0912
+admin searched 0912
+/home/sadegh/Documents/djangoproject/phonebook/tamrin4/djangotamrin4/settings.py changed, reloading.
+Watching for file changes with StatReloader
+admin searched 0912
+admin searched 0912
+/home/sadegh/Documents/djangoproject/phonebook/tamrin4/djangotamrin4/settings.py changed, reloading.
+INFO 2021-07-08 07:12:10,572 autoreload 18803 140190445209408 Watching for file changes with StatReloader
+INFO 2021-07-08 07:12:11,993 views 18803 140190261012224 admin searched 0912
+INFO 2021-07-08 07:12:14,539 views 18803 140190261012224 admin searched 12
+INFO 2021-07-08 07:13:19,269 autoreload 18803 140190445209408 /home/sadegh/Documents/djangoproject/phonebook/tamrin4/djangotamrin4/settings.py changed, reloading.
+INFO 2021-07-08 07:13:19,702 Watching for file changes with StatReloader
+INFO 2021-07-08 07:13:22,404 admin searched 12
+INFO 2021-07-08 07:16:52,957 /home/sadegh/Documents/djangoproject/phonebook/tamrin4/user/views.py changed, reloading.
+INFO 2021-07-08 07:16:53,371 Watching for file changes with StatReloader
+INFO 2021-07-08 07:19:08,555 /home/sadegh/Documents/djangoproject/phonebook/tamrin4/djangotamrin4/settings.py changed, reloading.
+INFO 2021-07-08 07:19:08,964 Watching for file changes with StatReloader
+INFO 2021-07-08 07:29:29,094 /home/sadegh/Documents/djangoproject/phonebook/tamrin4/user/models.py changed, reloading.
+INFO 2021-07-08 07:29:29,504 Watching for file changes with StatReloader
+INFO 2021-07-08 07:30:42,935 /home/sadegh/Documents/djangoproject/phonebook/tamrin4/user/models.py changed, reloading.
+INFO 2021-07-08 07:30:43,383 Watching for file changes with StatReloader
+INFO 2021-07-08 07:30:46,807 admin searched 12
+INFO 2021-07-08 07:31:02,899 admin searched 0912
+INFO 2021-07-08 07:37:41,403 admin searched 0912
+INFO 2021-07-08 07:37:42,718 admin searched 0912
+INFO 2021-07-08 10:03:15,256 Watching for file changes with StatReloader
+WARNING 2021-07-08 10:03:45,340 Not Found: /favicon.ico
+INFO 2021-07-08 10:03:48,817 admin searched 0912
+INFO 2021-07-08 10:04:08,865 /home/sadegh/Documents/djangoproject/phonebook/tamrin4/djangotamrin4/settings.py changed, reloading.
+INFO 2021-07-08 10:04:41,479 admin searched 12
+INFO 2021-07-08 10:04:43,963 admin searched 0912
+INFO 2021-07-08 10:06:12,142 admin searched 2

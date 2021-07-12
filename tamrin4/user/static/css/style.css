@@ -1,0 +1,24 @@
+@font-face {
+    font-family: "Vazir";
+    font-style: normal;
+    src: url("../fonts/vazir/Vazir-Regular.woff") format('woff'),
+    url("../fonts/vazir/Vazir-Regular.woff2") format('woff2');
+}
+@font-face {
+    font-family: "PublicSans";
+    font-style: normal;
+    src: url("../fonts/publicsans/PublicSans-Regular.woff") format('woff'),
+    url("../fonts/publicsans/PublicSans-Regular.woff2") format('woff2');
+}
+
+.nav-link {
+    font-family: PublicSans, serif;
+}
+
+p {
+    font-family: PublicSans, serif;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    font-family: PublicSans, serif;
+}

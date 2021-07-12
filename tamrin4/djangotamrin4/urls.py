@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.decorators.cache import cache_page
 
-from user.views import CreateUser, Search, NewSearch, EditNumber, PhoneListAPI, ActionView, PhoneBook
+from user.views import CreateUser, Search, NewSearch, EditNumber, PhoneListAPI, ActionView, PhoneBook, GetPdfPhoneBook
 from django.views.generic.base import TemplateView
 from rest_framework.routers import DefaultRouter
 
@@ -33,9 +33,10 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('newsearch/', NewSearch.as_view(), name='new search'),
-    path('phonebook/', cache_page(60 * 15)(PhoneBook.as_view()), name='phonebook'),
+    path('phonebook/', PhoneBook.as_view(), name='phonebook'),
     path('editnumber/<int:pk>', EditNumber.as_view(), name='edit'),
     path('phone/api/v1/', include(router.urls)),
     path('action/', ActionView.as_view(), name='action'),
+    path('pdfphonebook', GetPdfPhoneBook.as_view(), name='pdf'),
     path('__debug__/', include(debug_toolbar.urls)),
 ]

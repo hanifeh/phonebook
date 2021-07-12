@@ -13,27 +13,29 @@
 
 {% block script %}
     <script>
-    $(document).ready(function () {
-        $("button").click(function (event) {
-            var first_name = $('#id_first_name').val();
-            var last_name = $('#id_last_name').val();
-            var phone_number = $('#id_phone_number').val();
-            var user = $('#id_user').val();
-            $.ajax({
-                method: 'POST',
-                url: "/create/",
-                data: {
-                    first_name: first_name,
-                    last_name: last_name,
-                    phone_number: phone_number,
-                    user: user,
-                 },
-                success: function (response) {
-                    alert(response.status);
-                },
+        $(document).ready(function () {
+            $("button").click(function (event) {
+                var first_name = $('#id_first_name').val();
+                var last_name = $('#id_last_name').val();
+                var phone_number = $('#id_phone_number').val();
+                var user = $('#id_user').val();
+                $.ajax({
+                    method: 'POST',
+                    url: "/create/",
+                    data: {
+                        first_name: first_name,
+                        last_name: last_name,
+                        phone_number: phone_number,
+                        user: user,
+                    },
+                    success: function (response) {
+                        alert(response.status);
+                    }, error: function (response) {
+                        alert(response.responseJSON.errors);
+                    },
 
+                });
             });
         });
-    });
     </script>
 {% endblock %}
