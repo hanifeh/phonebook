@@ -41,3 +41,6 @@ INFO 2021-07-08 10:04:08,865 /home/sadegh/Documents/djangoproject/phonebook/tamr
 INFO 2021-07-08 10:04:41,479 admin searched 12
 INFO 2021-07-08 10:04:43,963 admin searched 0912
 INFO 2021-07-08 10:06:12,142 admin searched 2
+INFO 2021-07-14 10:36:50,373 user1 edit contact 09123456788
+INFO 2021-07-14 10:37:58,025 user1 edit contact 09123456788
+INFO 2021-07-14 10:39:40,389 admin searched 12

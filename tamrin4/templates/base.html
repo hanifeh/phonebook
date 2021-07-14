@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -17,22 +18,22 @@
     {#  left navbar items   #}
     <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'home' %}">Home</a>
+            <a class="nav-link" href="{% url 'home' %}">{% trans 'Home' %}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'create' %}">Create</a>
+            <a class="nav-link" href="{% url 'create' %}">{% trans 'Create' %}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'new search' %}">Search</a>
+            <a class="nav-link" href="{% url 'new search' %}">{% trans ' Search' %}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'phonebook' %}">Phonebook</a>
+            <a class="nav-link" href="{% url 'phonebook' %}">{% trans 'Phonebook' %}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'pdf' %}">Get PDF</a>
+            <a class="nav-link" href="{% url 'pdf' %}">{% trans 'Get PDF' %}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'action' %}">Actions</a>
+            <a class="nav-link" href="{% url 'action' %}">{% trans 'Actions' %}</a>
         </li>
     </ul>
     {# right navbar items #}

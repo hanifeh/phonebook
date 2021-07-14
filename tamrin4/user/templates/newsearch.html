@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block title %}Search{% endblock %}
 
 {% block content %}
@@ -16,9 +17,9 @@
     <br>
     <table id="div1">
         <tr>
-            <th>👥first name :</th>
-            <th>📑last name :</th>
-            <th>📞phone number :</th>
+            <th>👥{% trans 'First name' %} :</th>
+            <th>📑{% trans 'Last name' %} :</th>
+            <th>📞{% trans 'Phone Number' %} :</th>
         </tr>
         {% for obj in page_obj %}
             <tr>
