@@ -19,7 +19,6 @@ from . import serializers
 # Create your views here.
 from .forms import UserForm, EditForm
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -204,6 +203,9 @@ class GetPdfPhoneBook(LoginRequiredMixin, ListView):
             self.request.session['action'] = []
         self.request.session['action'] += [f'get phonebook pdf .']
         return HttpResponse(pdf, content_type='application/pdf')
+
+
+# API
 
 
 class PhoneListAPI(viewsets.ModelViewSet):
