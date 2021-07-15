@@ -11,6 +11,9 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from rest_framework import generics, viewsets
+from rest_framework.generics import ListAPIView
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 
 from . import forms, models
@@ -149,6 +152,15 @@ class PhoneBook(LoginRequiredMixin, ListView):
         return qs
 
 
+class APIPhoneBook(ListAPIView):
+    serializer_class = serializers.PhoneNumberSerializer
+    renderer_classes = [TemplateHTMLRenderer]
+
+    def get(self, request, *args, **kwargs):
+        qs = models.MyUser.objects.filter(user=self.request.user)
+        return Response({'qs': qs}, template_name='apiphone.html')
+
+
 class EditNumber(LoginRequiredMixin, UpdateView):
     model = models.MyUser
     template_name = 'editnumber.html'
@@ -189,6 +201,19 @@ class ActionView(LoginRequiredMixin, ListView):
             return qs
         else:
             return []
+
+
+class APIActionView(ListAPIView):
+    renderer_classes = [TemplateHTMLRenderer]
+
+    def get(self, request, *args, **kwargs):
+        if 'action' in self.request.session.keys():
+            qs = self.request.session['action']
+            if len(qs) > 5:
+                qs = qs[-5:]
+            return Response({'qs': qs}, template_name='actionapi.html')
+        else:
+            return Response({'qs': []}, template_name='actionapi.html')
 
 
 class GetPdfPhoneBook(LoginRequiredMixin, ListView):
