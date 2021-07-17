@@ -33,7 +33,7 @@ class PhoneBookTestCase(TestCase):
         user = get_user_model().objects.create(username='user1')
         self.client.force_login(user=user)
         response = self.client.get(reverse('create'))
-        self.assertContains(response, 'First name:')
+        self.assertContains(response, 'First name')
         response = self.client.post(reverse('create'), {'first_name': 'testfirst',
                                                         'last_name': 'testlast',
                                                         'phone_number': '09123456789'}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}Search{% endblock %}
+
+{% block content %}
+    <form action="" method="get">
+        <label for="searched"></label><input placeholder="Search" name="searched" required id="searched" maxlength="11">
+        <label for="mode"></label><select id="mode" name="mode">
+        <option value="1">bakhshi az shomare</option>
+        <option value="2">kole shomare</option>
+        <option value="3">shoroe shomare</option>
+        <option value="4">payane shomare</option>
+    </select>
+
+        <button class="btn btn-dark" type="submit"><i class="fas fa-search"></i>Search</button>
+    </form>
+    <br>
+    <table id="div1">
+        <tr>
+            <th>👥{% trans 'First name' %} :</th>
+            <th>📑{% trans 'Last name' %} :</th>
+            <th>📞{% trans 'Phone Number' %} :</th>
+        </tr>
+        {% for obj in qs %}
+            <tr>
+                <th>{{ obj.first_name }}</th>
+                <th>{{ obj.last_name }}</th>
+                <th>{{ obj.phone_number }} <a class="btn btn-primary float-right mr-2" href="{% url 'edit' obj.pk %}"
+                                              role="button"><i class="fas fa-edit"></i></a></th>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}
+
+{% block style %}
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+{% endblock %}

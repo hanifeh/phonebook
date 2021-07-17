@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+    <table id="div1">
+        <tr>
+            <th>👥first name :</th>
+            <th>📑last name :</th>
+            <th>📞phone number :</th>
+        </tr>
+        {% for obj in qs %}
+            <tr>
+                <th>{{ obj.first_name }}</th>
+                <th>{{ obj.last_name }}</th>
+                <th>{{ obj.phone_number }}<a class="btn btn-primary float-right mr-2" href="{% url 'edit' obj.pk %}"
+                                             role="button">Edit📝</a></th>
+            </tr>
+        {% endfor %}
+    </table>
+    <br>
+
+{% endblock %}
+
+{% block style %}
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+{% endblock %}

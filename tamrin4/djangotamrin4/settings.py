@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework_latex',
     'widget_tweaks',
     'rest_framework',
     'debug_toolbar',
@@ -71,6 +72,10 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
 ]
 
 WSGI_APPLICATION = 'djangotamrin4.wsgi.application'
@@ -189,3 +194,5 @@ LOGGING = {
         },
     }
 }
+
+LATEX_RESOURCES = '/home/user/path_to_resources'

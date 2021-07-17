@@ -1,0 +1,16 @@
+<table id="div1">
+    <tr>
+        <th>column :</th>
+        <th>first name :</th>
+        <th>last name :</th>
+        <th>phone number :</th>
+    </tr>
+    {% for obj in qs %}
+        <tr>
+            <th>{{ forloop.counter }}</th>
+            <th>{{ obj.first_name }}</th>
+            <th>{{ obj.last_name }}</th>
+            <th>{{ obj.phone_number }}</th>
+        </tr>
+    {% endfor %}
+</table>

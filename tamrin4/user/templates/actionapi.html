@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Actions{% endblock %}
+{% block content %}
+    {% for object in qs reversed %}
+        <h4>{{ forloop.revcounter }}: {{ object }}</h4>
+    {% empty %}
+        <h4>No action detected.</h4>
+    {% endfor %}
+{% endblock %}

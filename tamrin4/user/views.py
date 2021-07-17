@@ -7,14 +7,19 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import model_to_dict
 from django.http import JsonResponse, HttpResponse, HttpResponseForbidden, Http404
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template import Context
+from django.template.loader import get_template
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
-from rest_framework import generics, viewsets
+from drf_pdf.renderer import PDFRenderer
+from rest_framework import generics, viewsets, status
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_latex import renderers
 
 from . import forms, models
 from django.views.decorators.csrf import csrf_exempt
@@ -53,32 +58,6 @@ class CreateUser(LoginRequiredMixin, CreateView):
         self.request.session['action'] += [f'add contact : {self.object.phone_number} .']
         logger.info(f'{self.request.user} create {self.object.phone_number} .')
         return JsonResponse({'status': "ok"})
-
-
-# @csrf_exempt
-# @login_required
-# def search(request):
-#     if request.method == 'POST':
-#         searched = request.POST.get('searched', None)
-#         mode = request.POST.get('mode', None)
-#         if mode == '1':
-#             obj = models.MyUser.objects.filter(phone_number__contains=searched, user=request.user)
-#         elif mode == '2':
-#             obj = models.MyUser.objects.filter(phone_number=searched, user=request.user)
-#         elif mode == '3':
-#             obj = models.MyUser.objects.filter(phone_number__startswith=searched, user=request.user)
-#         elif mode == '4':
-#             obj = models.MyUser.objects.filter(phone_number__endswith=searched, user=request.user)
-#         else:
-#             return JsonResponse({'result': "error"})
-#         if obj:
-#             return JsonResponse({
-#                 'results': list(obj.values())
-#             })
-#         else:
-#             return JsonResponse({'result': "phone number not found !"})
-#     else:
-#         return render(request, 'search.html', {})
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -141,6 +120,33 @@ class NewSearch(LoginRequiredMixin, ListView):
         return obj
 
 
+class APINewSearch(LoginRequiredMixin, ListAPIView):
+    serializer_class = serializers.PhoneNumberSerializer
+    renderer_classes = [TemplateHTMLRenderer]
+
+    def get(self, request, *args, **kwargs):
+        searched = self.request.GET.get('searched', None)
+        mode = self.request.GET.get('mode', None)
+        if mode == '1':
+            obj = models.MyUser.objects.filter(phone_number__contains=searched, user=self.request.user)
+        elif mode == '2':
+            obj = models.MyUser.objects.filter(phone_number=searched, user=self.request.user)
+        elif mode == '3':
+            obj = models.MyUser.objects.filter(phone_number__startswith=searched, user=self.request.user)
+        elif mode == '4':
+            obj = models.MyUser.objects.filter(phone_number__endswith=searched, user=self.request.user)
+        else:
+            obj = models.MyUser.objects.filter(user=self.request.user)
+
+        if mode:
+            if 'action' not in self.request.session.keys():
+                self.request.session['action'] = []
+
+            self.request.session['action'] += [f'search : {searched} .']
+            logger.info(f'{self.request.user} searched {searched}')
+        return Response({'qs': obj}, template_name='apisearch.html')
+
+
 @method_decorator(csrf_exempt, name='dispatch')
 class PhoneBook(LoginRequiredMixin, ListView):
     model = models.MyUser
@@ -152,7 +158,7 @@ class PhoneBook(LoginRequiredMixin, ListView):
         return qs
 
 
-class APIPhoneBook(ListAPIView):
+class APIPhoneBook(LoginRequiredMixin, ListAPIView):
     serializer_class = serializers.PhoneNumberSerializer
     renderer_classes = [TemplateHTMLRenderer]
 
@@ -203,7 +209,7 @@ class ActionView(LoginRequiredMixin, ListView):
             return []
 
 
-class APIActionView(ListAPIView):
+class APIActionView(LoginRequiredMixin, ListAPIView):
     renderer_classes = [TemplateHTMLRenderer]
 
     def get(self, request, *args, **kwargs):
@@ -220,6 +226,9 @@ class GetPdfPhoneBook(LoginRequiredMixin, ListView):
     template_name = 'pdfphonebook.html'
     model = models.MyUser
 
+    def get_queryset(self):
+        return models.MyUser.objects.filter(user=self.request.user)
+
     def get(self, request, *args, **kwargs):
         g = super(GetPdfPhoneBook, self).get(request, *args, **kwargs)
         rendered_content = g.rendered_content
@@ -230,7 +239,20 @@ class GetPdfPhoneBook(LoginRequiredMixin, ListView):
         return HttpResponse(pdf, content_type='application/pdf')
 
 
-# API
+class APIPdfPhoneBook(LoginRequiredMixin, ListAPIView):
+    serializer_class = serializers.PhoneNumberSerializer
+    renderer_classes = [PDFRenderer]
+    template_name = 'pdfphonebook.html'
+
+    def get(self, request, *args, **kwargs):
+        qs = models.MyUser.objects.filter(user=self.request.user)
+        template_path = 'pdfphonebook.html'
+        context = {'object_list': qs}
+        template = get_template(template_path)
+        html = template.render(context)
+        pdf = weasyprint.HTML(string=html).write_pdf()
+
+        return Response(pdf, content_type='application/pdf')
 
 
 class PhoneListAPI(viewsets.ModelViewSet):
