@@ -20,7 +20,7 @@ from django.urls import path, include
 from django.views.decorators.cache import cache_page
 
 from user.views import CreateUser, Search, NewSearch, EditNumber, PhoneListAPI, ActionView, PhoneBook, GetPdfPhoneBook, \
-    APIPhoneBook, APIActionView, APINewSearch, APIPdfPhoneBook
+    APIPhoneBook, APIActionView, APINewSearch, APIPdfPhoneBook, APICreateUser, APIEditNumber
 from django.views.generic.base import TemplateView
 from rest_framework.routers import DefaultRouter
 
@@ -35,7 +35,7 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('newsearch/', NewSearch.as_view(), name='new search'),
     path('phonebook/', PhoneBook.as_view(), name='phonebook'),
-    path('editnumber/<int:pk>', EditNumber.as_view(), name='edit'),
+    path('editnumber/<int:pk>/', EditNumber.as_view(), name='edit'),
     path('phone/api/v1/', include(router.urls)),
     path('action/', ActionView.as_view(), name='action'),
     path('pdfphonebook/', GetPdfPhoneBook.as_view(), name='pdf'),
@@ -43,5 +43,7 @@ urlpatterns = [
     path('actionapi/', APIActionView.as_view(), name='apiaction'),
     path('searchapi/', APINewSearch.as_view(), name='apisearch'),
     path('pdfapi/', APIPdfPhoneBook.as_view(), name='apipdf'),
+    path('createapi/', APICreateUser.as_view(), name='apicreate'),
+    path('editapi/<int:pk>/', APIEditNumber.as_view(), name='apiedit'),
     path('__debug__/', include(debug_toolbar.urls)),
 ]

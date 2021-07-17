@@ -25,7 +25,7 @@
             <tr>
                 <th>{{ obj.first_name }}</th>
                 <th>{{ obj.last_name }}</th>
-                <th>{{ obj.phone_number }} <a class="btn btn-primary float-right mr-2" href="{% url 'edit' obj.pk %}"
+                <th>{{ obj.phone_number }} <a class="btn btn-primary float-right mr-2" href="{% url 'apiedit' obj.pk %}"
                                               role="button"><i class="fas fa-edit"></i></a></th>
             </tr>
         {% endfor %}

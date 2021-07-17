@@ -14,7 +14,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from drf_pdf.renderer import PDFRenderer
 from rest_framework import generics, viewsets, status
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, ListCreateAPIView, UpdateAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework.response import Response
@@ -58,6 +58,29 @@ class CreateUser(LoginRequiredMixin, CreateView):
         self.request.session['action'] += [f'add contact : {self.object.phone_number} .']
         logger.info(f'{self.request.user} create {self.object.phone_number} .')
         return JsonResponse({'status': "ok"})
+
+
+class APICreateUser(LoginRequiredMixin, ListCreateAPIView):
+    serializer_class = serializers.PhoneNumberSerializer
+    renderer_classes = [TemplateHTMLRenderer, JSONRenderer]
+    template_name = 'apicreate.html'
+
+    def post(self, request, *args, **kwargs):
+        print(request.data)
+        request.data._mutable = True
+        request.data['user'] = self.request.user
+        request.data._mutable = False
+        print(request.data)
+        data = request.data
+        serializer = serializers.PhoneNumberSerializer(data=data, context={'request': request})
+        if not serializer.is_valid():
+            return JsonResponse({'errors': "error"}, status=422)
+        serializer.save()
+        return JsonResponse({'status': "ok"})
+
+    def get(self, request, *args, **kwargs):
+        serializer = serializers.PhoneNumberSerializer()
+        return Response({'serializer': serializer})
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -195,6 +218,42 @@ class EditNumber(LoginRequiredMixin, UpdateView):
         return redirect('/newsearch')
 
 
+class APIEditNumber(LoginRequiredMixin, ListCreateAPIView):
+    serializer_class = serializers.PhoneNumberSerializer
+    renderer_classes = [TemplateHTMLRenderer, JSONRenderer]
+    template_name = 'apiedit.html'
+
+    def get_queryset(self):
+        number = models.MyUser.objects.filter(pk=self.kwargs['pk'], user=self.request.user)
+        if number:
+            return number
+        else:
+            raise Http404("No MyModel matches the given query.")
+
+    def post(self, request, *args, **kwargs):
+        request.data._mutable = True
+        request.data['user'] = self.request.user
+        request.data._mutable = False
+        number = models.MyUser.objects.get(pk=self.kwargs['pk'], user=self.request.user)
+        print(request.data)
+        try:
+            number.first_name = request.data['first_name']
+            number.last_name = request.data['last_name']
+            number.phone_number = request.data['phone_number']
+            number.save()
+            return JsonResponse({'status': "ok"})
+        except:
+            return JsonResponse({'result': "error"})
+
+    def get(self, request, *args, **kwargs):
+        number = models.MyUser.objects.get(pk=self.kwargs['pk'], user=self.request.user)
+        if number:
+            serializer = serializers.PhoneNumberSerializer(initial=number)
+            return Response({'serializer': serializer, 'number': number})
+        else:
+            raise Http404("No MyModel matches the given query.")
+
+
 @method_decorator(csrf_exempt, name='dispatch')
 class ActionView(LoginRequiredMixin, ListView):
     template_name = 'action.html'
@@ -249,9 +308,8 @@ class APIPdfPhoneBook(LoginRequiredMixin, ListAPIView):
         template_path = 'pdfphonebook.html'
         context = {'object_list': qs}
         template = get_template(template_path)
-        html = template.render(context)
+        html = template.render(context=context)
         pdf = weasyprint.HTML(string=html).write_pdf()
-
         return Response(pdf, content_type='application/pdf')
 
 

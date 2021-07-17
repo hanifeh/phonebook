@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load rest_framework %}
+
+{% block title %}Creat new contact{% endblock %}
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="first_name">{% trans 'First name' %}</label>
+            <input type="text" name="first_name" maxlength="50" class="form-control" required="" id="id_first_name">
+        </div>
+        <div class="form-group">
+            <label for="last_name">{% trans 'Last name' %}</label>
+            <input type="text" name="last_name" maxlength="50" class="form-control" required="" id="id_last_name">
+        </div>
+        <div class="form-group">
+            <label for="phone_number">{% trans 'Phone Number' %}</label>
+            <input type="text" name="phone_number" maxlength="11" class="form-control" required="" id="id_phone_number">
+        </div>
+    </form>
+    <button class="btn btn-info">Create</button>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript"> window.CSRF_TOKEN = "{{ csrf_token }}"; </script>
+    <script>
+        $(document).ready(function () {
+            $("button").click(function (event) {
+                var first_name = $('#id_first_name').val();
+                var last_name = $('#id_last_name').val();
+                var phone_number = $('#id_phone_number').val();
+                var csrf = window.CSRF_TOKEN
+                $.ajax({
+                    method: 'POST',
+                    url: "/createapi/",
+                    data: {
+                        csrfmiddlewaretoken: csrf,
+                        first_name: first_name,
+                        last_name: last_name,
+                        phone_number: phone_number,
+                    },
+                    success: function (response) {
+                        alert(response.status);
+                    },
+                    error: function (response) {
+                        alert(response.responseJSON.errors);
+                    },
+                });
+            });
+        });
+    </script>
+{% endblock %}

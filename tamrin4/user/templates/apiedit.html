@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load rest_framework %}
+
+{% block title %}Edit contact{% endblock %}
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="first_name">{% trans 'First name' %}</label>
+            <input type="text" name="first_name" maxlength="50" class="form-control" required="" id="id_first_name" value="{{ number.first_name }}">
+        </div>
+        <div class="form-group">
+            <label for="last_name">{% trans 'Last name' %}</label>
+            <input type="text" name="last_name" maxlength="50" class="form-control" required="" id="id_last_name" value="{{ number.last_name }}">
+        </div>
+        <div class="form-group">
+            <label for="phone_number">{% trans 'Phone Number' %}</label>
+            <input type="text" name="phone_number" maxlength="11" class="form-control" required="" id="id_phone_number" value="{{ number.phone_number }}">
+        </div>
+    <button class="btn btn-info">Create</button>
+    </form>
+{% endblock %}
