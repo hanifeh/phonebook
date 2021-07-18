@@ -14,7 +14,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from drf_pdf.renderer import PDFRenderer
 from rest_framework import generics, viewsets, status
-from rest_framework.generics import ListAPIView, CreateAPIView, ListCreateAPIView, UpdateAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, ListCreateAPIView, UpdateAPIView, RetrieveUpdateAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework.response import Response
@@ -246,11 +246,11 @@ class APIEditNumber(LoginRequiredMixin, ListCreateAPIView):
             if 'action' not in self.request.session.keys():
                 self.request.session['action'] = []
 
-            self.request.session['action'] += [f'add contact : {request.data["phone_number"]} .']
-            logger.info(f'{self.request.user} create {request.data["phone_number"]} .')
+            self.request.session['action'] += [f'edit contact : {request.data["phone_number"]} .']
+            logger.info(f'{self.request.user} edit {request.data["phone_number"]} .')
             return JsonResponse({'status': "ok"})
         except:
-            return JsonResponse({'result': "error"})
+            return JsonResponse({'status': "error"})
 
     def get(self, request, *args, **kwargs):
         number = models.MyUser.objects.get(pk=self.kwargs['pk'], user=self.request.user)

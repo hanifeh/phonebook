@@ -18,6 +18,36 @@
             <label for="phone_number">{% trans 'Phone Number' %}</label>
             <input type="text" name="phone_number" maxlength="11" class="form-control" required="" id="id_phone_number" value="{{ number.phone_number }}">
         </div>
-    <button class="btn btn-info">Create</button>
     </form>
+    <button class="btn btn-info">Create</button>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript"> window.CSRF_TOKEN = "{{ csrf_token }}"; </script>
+    <script>
+        $(document).ready(function () {
+            $("button").click(function (event) {
+                var first_name = $('#id_first_name').val();
+                var last_name = $('#id_last_name').val();
+                var phone_number = $('#id_phone_number').val();
+                var pathname = window.location.pathname;
+                var csrf = window.CSRF_TOKEN
+                $.ajax({
+                    method: 'POST',
+                    url: pathname,
+                    data: {
+                        csrfmiddlewaretoken: csrf,
+                        first_name: first_name,
+                        last_name: last_name,
+                        phone_number: phone_number,
+                    },
+                    success: function (response) {
+                        alert(response.status);
+                    },
+                    error: function (response) {
+                        alert(response.responseJSON.errors);
+                    },
+                });
+            });
+        });
+    </script>
 {% endblock %}

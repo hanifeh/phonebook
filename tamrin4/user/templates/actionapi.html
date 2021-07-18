@@ -2,9 +2,34 @@
 
 {% block title %}Actions{% endblock %}
 {% block content %}
-    {% for object in qs reversed %}
-        <h4>{{ forloop.revcounter }}: {{ object }}</h4>
-    {% empty %}
-        <h4>No action detected.</h4>
-    {% endfor %}
+    <table id="div1">
+        {% for object in qs reversed %}
+            <tr>
+                <th>{{ forloop.revcounter }}</th>
+                <th>{{ object }}</th>
+            </tr>
+        {% empty %}
+            <h4>No action detected.</h4>
+        {% endfor %}
+    </table>
+{% endblock %}
+
+{% block style %}
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
 {% endblock %}
