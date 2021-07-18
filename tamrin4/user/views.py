@@ -66,15 +66,18 @@ class APICreateUser(LoginRequiredMixin, ListCreateAPIView):
     template_name = 'apicreate.html'
 
     def post(self, request, *args, **kwargs):
-        print(request.data)
         request.data._mutable = True
         request.data['user'] = self.request.user
         request.data._mutable = False
-        print(request.data)
         data = request.data
         serializer = serializers.PhoneNumberSerializer(data=data, context={'request': request})
         if not serializer.is_valid():
             return JsonResponse({'errors': "error"}, status=422)
+        if 'action' not in self.request.session.keys():
+            self.request.session['action'] = []
+
+        self.request.session['action'] += [f'add contact : {request.data["phone_number"]} .']
+        logger.info(f'{self.request.user} create {request.data["phone_number"]} .')
         serializer.save()
         return JsonResponse({'status': "ok"})
 
@@ -235,12 +238,16 @@ class APIEditNumber(LoginRequiredMixin, ListCreateAPIView):
         request.data['user'] = self.request.user
         request.data._mutable = False
         number = models.MyUser.objects.get(pk=self.kwargs['pk'], user=self.request.user)
-        print(request.data)
         try:
             number.first_name = request.data['first_name']
             number.last_name = request.data['last_name']
             number.phone_number = request.data['phone_number']
             number.save()
+            if 'action' not in self.request.session.keys():
+                self.request.session['action'] = []
+
+            self.request.session['action'] += [f'add contact : {request.data["phone_number"]} .']
+            logger.info(f'{self.request.user} create {request.data["phone_number"]} .')
             return JsonResponse({'status': "ok"})
         except:
             return JsonResponse({'result': "error"})
@@ -310,6 +317,9 @@ class APIPdfPhoneBook(LoginRequiredMixin, ListAPIView):
         template = get_template(template_path)
         html = template.render(context=context)
         pdf = weasyprint.HTML(string=html).write_pdf()
+        if 'action' not in self.request.session.keys():
+            self.request.session['action'] = []
+        self.request.session['action'] += [f'get phonebook pdf .']
         return Response(pdf, content_type='application/pdf')
 
 
